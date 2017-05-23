@@ -1,5 +1,6 @@
 import * as PIXI from "pixi.js";
 import entityManager from "./entityManager"
+import mapHandler from './mapHandler.js'
 
 class gameEngine {
 
@@ -16,13 +17,15 @@ class gameEngine {
 
   start() {
     this.renderer = this.initRenderer();
-    this.em = new entityManager()
     this.mainScene = new PIXI.Container();
+    entityManager.addEntity(new mapHandler(this.mainScene));
+    console.log(this.mainScene);
     this.gameLoop(-1)
   }
 
   gameLoop() {
     requestAnimationFrame(this.gameLoop.bind(this));
+    entityManager.update();
     this.renderer.render(this.mainScene)
   }
 

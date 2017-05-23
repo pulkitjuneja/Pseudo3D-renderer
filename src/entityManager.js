@@ -1,16 +1,16 @@
-import * as PIXI from "pixi.js";
-
+import entity from './entity.js'
 
 class entityManager {
   constructor() {
     this._entities = [];
   }
 
-  addEntity(entity) {
-    if (!(entity.constructor.name == 'entity')) {
-      throw "object is not an entity"
-    }
-    this._entities.push(entity)
+  addEntity(ent) {
+    // console.log(ent.__proto)
+    // if (!(ent.prototype instanceof entity)) {
+    //   throw "object is not an entity"
+    // }
+    this._entities.push(ent)
   }
 
   removeEntity(entity) {
@@ -19,7 +19,15 @@ class entityManager {
     })
   }
 
+  findByName(name) {
+    this._entities.find((ent) => {
+      return ent.name == name;
+    })
+  }
+
   update() {
     this._entities.forEach(entity => entity.update());
   }
 }
+
+export default new entityManager();
