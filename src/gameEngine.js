@@ -1,4 +1,5 @@
 import * as PIXI from "pixi.js";
+import entityManager from "./entityManager"
 
 class gameEngine {
 
@@ -15,6 +16,7 @@ class gameEngine {
 
   start() {
     this.renderer = this.initRenderer();
+    this.em = new entityManager()
     this.mainScene = new PIXI.Container();
     this.gameLoop(-1)
   }
