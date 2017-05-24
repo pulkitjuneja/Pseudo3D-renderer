@@ -1,6 +1,7 @@
 import * as PIXI from "pixi.js";
 import entityManager from "./entityManager"
 import mapHandler from './mapHandler.js'
+import player from './player'
 
 class gameEngine {
 
@@ -19,7 +20,8 @@ class gameEngine {
     this.renderer = this.initRenderer();
     this.mainScene = new PIXI.Container();
     entityManager.addEntity(new mapHandler(this.mainScene));
-    console.log(this.mainScene);
+    entityManager.addEntity(new player(this.mainScene));
+    // entityManager._entities.forEach((ent) => { console.log(ent.name) });
     this.gameLoop(-1)
   }
 

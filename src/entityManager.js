@@ -20,9 +20,11 @@ class entityManager {
   }
 
   findByName(name) {
-    this._entities.find((ent) => {
-      return ent.name == name;
+    
+    const result = this._entities.find((ent) => {
+      return ent.name === name;
     })
+    return result;
   }
 
   update() {
