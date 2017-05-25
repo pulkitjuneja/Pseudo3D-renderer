@@ -19,9 +19,8 @@ class gameEngine {
   start() {
     this.renderer = this.initRenderer();
     this.mainScene = new PIXI.Container();
-    entityManager.addEntity(new mapHandler(this.mainScene));
     entityManager.addEntity(new player(this.mainScene));
-    // entityManager._entities.forEach((ent) => { console.log(ent.name) });
+    entityManager.addEntity(new mapHandler(this.mainScene));
     this.gameLoop(-1)
   }
 

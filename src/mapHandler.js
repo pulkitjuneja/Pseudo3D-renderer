@@ -13,6 +13,7 @@ export default class mapHandler extends entity {
     this.mapHeight = map.points.length;
     this.miniMapScale = 6;
     this.drawMiniMap();
+    console.log(this.mapWidth,this.mapHeight);
     this.container.position = new PIXI.Point(800 - this.mapWidth * this.miniMapScale, 600 - this.mapHeight * this.miniMapScale)
     mainContainer.addChild(this.container);
   }
@@ -39,6 +40,7 @@ export default class mapHandler extends entity {
 
   drawMiniMap() {
     this.container.beginFill(0xFF3300);
+    this.container.lineStyle(1,0xFFFFFF,1)
     for (let y = 0; y < this.mapHeight; y++) {
       for (let x = 0; x < this.mapWidth; x++) {
         let wall = this.map[y][x];

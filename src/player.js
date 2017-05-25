@@ -1,14 +1,14 @@
 import * as PIXI from 'pixi.js'
 import entity from './entity'
-
+import entityManager from './entityManager'
 
 
 export default class player extends entity {
 
   constructor(mainScene) {
     super("player");
-    this.posX = 0;
-    this.posY = 0;
+    this.posX = 15;
+    this.posY = 10;
     this.rotation = 0;
     this.speed = 0;
     this.movSpeed = 1;
@@ -21,12 +21,14 @@ export default class player extends entity {
   }
 
   update() {
+    if (this.mapRef == undefined)
+      this.mapRef = entityManager.findByName("mapHandler");
     this.move();
     this.updateSprite();
   }
 
   updateSprite() {
-    this.sprite.position = new PIXI.Point(this.posX, this.posY);
+    this.sprite.position = new PIXI.Point(this.posX*4, this.posY*4);
     this.sprite.rotation = this.rotation;
   }
 
@@ -34,13 +36,26 @@ export default class player extends entity {
     const moveStep = this.speed * this.movSpeed;
     this.rotation += this.direction * this.rotationSpeed;
 
-    this.posX = this.posX + Math.cos(this.rotation) * moveStep;
-    this.posY = this.posY + Math.sin(this.rotation) * moveStep;
+    let newX = this.posX + Math.cos(this.rotation) * moveStep;
+    let newY = this.posY + Math.sin(this.rotation) * moveStep;
+    
+    if (!this.isBlocking(newX, newY)) {
+      this.posX = newX;
+      this.posY = newY;
+    }
+  }
+
+  isBlocking(newX, newY) {
+    const arrPosX = Math.floor(newX / this.mapRef.miniMapScale)
+    const arrPosY = Math.floor(newY / this.mapRef.miniMapScale)
+
+    if (arrPosY < 0 || arrPosY >= this.mapRef.mapHeight || arrPosX < 0 || arrPosX >= this.mapRef.mapWidth)
+      return true;
+    return (this.mapRef.map[arrPosY][arrPosX] != 0);
   }
 
   bindKeys() {
     const onKeyDown = (e) => {
-      console.log("keydown");
       e = e || window.event;
       switch (e.keyCode) {
         case 38:
