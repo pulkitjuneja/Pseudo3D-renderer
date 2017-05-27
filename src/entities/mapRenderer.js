@@ -9,6 +9,7 @@ export default class mapRenderer extends entity {
     this.init = false
     this.container = new PIXI.Container();
     this.stripWidth = 4 // no. of pixels in each strip 
+    this.viewDist = 50;
     this.numStrips = config.screen.width / this.stripWidth;
   }
 
@@ -22,13 +23,21 @@ export default class mapRenderer extends entity {
     if (!this.init) {
       this.init();
     }
+    this.castRays();
   }
 
   castRays() {
     let stripIdx = 0;
     for (let i = 0; i < this.numStrips; i++) {
-      let rayScreenPos = -this.numStrips / 2 + i * this.stripWidth;
+      let rayScreenPos = (-this.numStrips / 2) + i * this.stripWidth;
+      let rayViewDist = Math.sqrt(rayScreenPos*rayScreenPos + this.viewDist*this.viewDist);
+      let rayAngle = Math.asin(rayScreenPos/rayViewDist);
+      this.castSingleRay(this.playerRef.rotation + rayAngle);
     }
+  }
+
+  castSingleRay (angle) {
+
   }
 
 }
