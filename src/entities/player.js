@@ -1,6 +1,6 @@
 import * as PIXI from 'pixi.js'
-import entity from './entity'
-import entityManager from './entityManager'
+import entity from '../entity'
+import entityManager from '../entityManager'
 
 
 export default class player extends entity {
@@ -22,13 +22,13 @@ export default class player extends entity {
 
   update() {
     if (this.mapRef == undefined)
-      this.mapRef = entityManager.findByName("mapHandler");
+      this.mapRef = entityManager.findByName("miniMapHandler");
     this.move();
     this.updateSprite();
   }
 
   updateSprite() {
-    this.sprite.position = new PIXI.Point(this.posX*4, this.posY*4);
+    this.sprite.position = new PIXI.Point(this.posX, this.posY);
     this.sprite.rotation = this.rotation;
   }
 

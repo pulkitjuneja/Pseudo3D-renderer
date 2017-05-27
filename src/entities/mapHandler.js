@@ -1,12 +1,12 @@
 import * as PIXI from 'pixi.js'
-import entity from './entity.js'
-import map from './Models/map.js'
-import entityManager from './entityManager'
+import entity from '../entity.js'
+import map from '../Models/map.js'
+import entityManager from '../entityManager'
 
-export default class mapHandler extends entity {
+export default class miniMapHandler extends entity {
 
   constructor(mainContainer) {
-    super("mapHandler");
+    super("miniMapHandler");
     this.container = new PIXI.Graphics();
     this.map = map.points;
     this.mapWidth = map.points[0].length;
@@ -26,6 +26,11 @@ export default class mapHandler extends entity {
     this.drawMiniMap();
     this.drawPlayer();
   }
+
+  // castRays () {
+  //   let stripIdx = 0 
+  //   for (let i = 0 ; i <numStrips)
+  // }
 
   drawPlayer() {
     this.container.beginFill(0xFFFFFF);

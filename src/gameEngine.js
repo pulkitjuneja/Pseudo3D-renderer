@@ -1,12 +1,13 @@
 import * as PIXI from "pixi.js";
 import entityManager from "./entityManager"
-import mapHandler from './mapHandler.js'
-import player from './player'
+import miniMapHandler from './entities/mapHandler.js'
+import player from './entities/player'
+import config from './config/config'
 
 class gameEngine {
 
   initRenderer() {
-    const renderer = PIXI.autoDetectRenderer(800, 600, {
+    const renderer = PIXI.autoDetectRenderer(config.screen.width, config.screen.height, {
       antialias: false,
       transparent: false,
       resolution: 1
@@ -20,13 +21,15 @@ class gameEngine {
     this.renderer = this.initRenderer();
     this.mainScene = new PIXI.Container();
     entityManager.addEntity(new player(this.mainScene));
-    entityManager.addEntity(new mapHandler(this.mainScene));
+    entityManager.addEntity(new miniMapHandler(this.mainScene));
     this.gameLoop(-1)
   }
 
   gameLoop() {
     requestAnimationFrame(this.gameLoop.bind(this));
     entityManager.update();
+    console.log(this.mainScene.position)
+    console.log(this.mainScene.width);
     this.renderer.render(this.mainScene)
   }
 
