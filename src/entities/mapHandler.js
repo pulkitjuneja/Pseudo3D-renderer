@@ -43,6 +43,13 @@ export default class miniMapHandler extends entity {
     this.container.lineTo (lineEndX, lineEndY);
   }
 
+  drawRay(x,y) {
+    this.container.moveTo(this.playerRef.posX, this.playerRef.posY);
+    this.container.lineStyle(1,0x2345FF,0.3);
+    this.container.lineTo (x, y);
+
+  }
+
   drawMiniMap() {
     this.container.beginFill(0xFF3300);
     this.container.lineStyle(1,0xFFFFFF,1)

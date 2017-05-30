@@ -2,6 +2,7 @@ import * as PIXI from "pixi.js";
 import entityManager from "./entityManager"
 import miniMapHandler from './entities/mapHandler.js'
 import player from './entities/player'
+import mapRenderer from './entities/maprenderer'
 import config from './config/config'
 
 class gameEngine {
@@ -22,14 +23,13 @@ class gameEngine {
     this.mainScene = new PIXI.Container();
     entityManager.addEntity(new player(this.mainScene));
     entityManager.addEntity(new miniMapHandler(this.mainScene));
+    entityManager.addEntity(new mapRenderer(this.mainScene));
     this.gameLoop(-1)
   }
 
   gameLoop() {
     requestAnimationFrame(this.gameLoop.bind(this));
     entityManager.update();
-    console.log(this.mainScene.position)
-    console.log(this.mainScene.width);
     this.renderer.render(this.mainScene)
   }
 
