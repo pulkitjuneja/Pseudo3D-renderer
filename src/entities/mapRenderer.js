@@ -11,7 +11,7 @@ export default class mapRenderer extends entity {
     this.init = false
     this.container = new PIXI.Container();
     this.stripWidth = 1 // no. of pixels in each strip 
-    this.viewDist = 50;
+    this.viewDist = 300;
     this.numStrips = config.screen.width / this.stripWidth;
   }
 
@@ -30,7 +30,7 @@ export default class mapRenderer extends entity {
 
   castRays() {
     let stripIdx = 0;
-     for (let i = 0; i < this.numStrips; i++) {
+    for (let i = 0; i < this.numStrips; i++) {
       let rayScreenPos = (-this.numStrips / 2 + i) * this.stripWidth;
       let rayViewDist = Math.sqrt(rayScreenPos * rayScreenPos + this.viewDist * this.viewDist);
       let rayAngle = Math.asin(rayScreenPos / rayViewDist);
@@ -39,15 +39,20 @@ export default class mapRenderer extends entity {
   }
 
   castSingleRay(rayAngle) {
-    let twoPI = 6.28;
+    let twoPI = Math.PI * 2;
 
     rayAngle %= twoPI;
     if (rayAngle < 0) rayAngle += twoPI;
 
+    let dist = 0;
+    let xhit = 0, yhit = 0;
+
     let right = (rayAngle > twoPI * 0.75 || rayAngle < twoPI * 0.25);
     let up = (rayAngle < 0 || rayAngle > Math.PI);
+
     let angleSin = Math.sin(rayAngle);
     let angleCos = Math.cos(rayAngle);
+
     let slope = angleSin / angleCos;
     let dX = right ? 1 : -1;
     let dY = dX * slope;
@@ -62,9 +67,31 @@ export default class mapRenderer extends entity {
         let distX = x - this.playerRef.posX;
         let distY = y - this.playerRef.posY;
 
-        let dist = distX * distX + distY * distY;
+        dist = distX * distX + distY * distY;
+        xhit = x; yhit = y;
+        break;
+      }
+      x += dX;
+      y += dY;
+    }
 
-        this.mapRef.drawRay(x, y);
+    slope = angleCos/angleSin
+     dY = up ? -1 : 1;
+     dX = dY * slope;
+     y = up ? Math.floor(this.playerRef.posY) : Math.ceil(this.playerRef.posY);
+     x = this.playerRef.posX + (y - this.playerRef.posY) * slope;
+
+    while (x / this.mapRef.miniMapScale >= 0 && x / this.mapRef.miniMapScale < this.mapRef.mapWidth && y / this.mapRef.miniMapScale >= 0 && y / this.mapRef.miniMapScale < this.mapRef.mapHeight) {
+      let wallX = Math.floor(x / this.mapRef.miniMapScale);
+      let wallY = Math.floor(y / this.mapRef.miniMapScale);
+      if (this.mapRef.map[wallY][wallX] > 0) {
+        let distX = x - this.playerRef.posX;
+        let distY = y - this.playerRef.posY;
+        let blockdist = distX * distX + distY * distY;
+        if (!dist || blockdist < dist) {
+          dist = blockdist;
+          xhit = x; yhit = y;
+        }
         break;
       }
 
@@ -72,6 +99,8 @@ export default class mapRenderer extends entity {
       y += dY;
     }
 
+    if (dist != 0) {
+      this.mapRef.drawRay(xhit, yhit);
+    }
   }
-
 }
