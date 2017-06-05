@@ -27,11 +27,6 @@ export default class miniMapHandler extends entity {
     this.drawPlayer();
   }
 
-  // castRays () {
-  //   let stripIdx = 0 
-  //   for (let i = 0 ; i <numStrips)
-  // }
-
   drawPlayer() {
     this.container.beginFill(0xFFFFFF);
     this.container.drawCircle(this.playerRef.posX, this.playerRef.posY, 2);
@@ -45,7 +40,7 @@ export default class miniMapHandler extends entity {
 
   drawRay(x,y) {
     this.container.moveTo(this.playerRef.posX, this.playerRef.posY);
-    this.container.lineStyle(1,0x2345FF,0.1);
+    this.container.lineStyle(1,0x2345FF,0.4);
     this.container.lineTo (x, y);
 
   }

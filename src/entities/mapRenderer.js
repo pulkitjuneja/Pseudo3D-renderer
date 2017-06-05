@@ -10,10 +10,27 @@ export default class mapRenderer extends entity {
     super("mapRenderer");
     this.init = false
     this.container = new PIXI.Container();
-    this.stripWidth = 1 // no. of pixels in each strip 
-    this.viewDist = 300;
+    this.stripWidth = 4 // no. of pixels in each strip 
+    this.viewDist = 1000;
+    this.strips = [];
     this.numStrips = config.screen.width / this.stripWidth;
+    mainScene.addChild(this.container);
+    this.initImageStrips();
   }
+
+  initImageStrips() {
+    let stripTex = PIXI.utils.TextureCache["images/walls.png"]
+    stripTex.frame = new PIXI.Rectangle(0, 0, 4, 4);
+    for (let i = 0; i < this.numStrips; i++) {
+      this.strips[i] = new PIXI.Sprite(stripTex);
+      this.strips[i].width = 4;
+      this.strips[i].height = 0;
+      this.strips[i].x = i * this.stripWidth;
+      this.strips[i].y = 0;
+      this.container.addChild(this.strips[i]);
+    }
+  }
+
 
   initFunc() {
     this.playerRef = entityManager.findByName('player');
@@ -34,11 +51,11 @@ export default class mapRenderer extends entity {
       let rayScreenPos = (-this.numStrips / 2 + i) * this.stripWidth;
       let rayViewDist = Math.sqrt(rayScreenPos * rayScreenPos + this.viewDist * this.viewDist);
       let rayAngle = Math.asin(rayScreenPos / rayViewDist);
-      this.castSingleRay(this.playerRef.rotation + rayAngle);
+      this.castSingleRay(this.playerRef.rotation + rayAngle, i);
     }
   }
 
-  castSingleRay(rayAngle) {
+  castSingleRay(rayAngle, stripIndex) {
     let twoPI = Math.PI * 2;
 
     rayAngle %= twoPI;
@@ -75,11 +92,11 @@ export default class mapRenderer extends entity {
       y += dY;
     }
 
-    slope = angleCos/angleSin
-     dY = up ? -1 : 1;
-     dX = dY * slope;
-     y = up ? Math.floor(this.playerRef.posY) : Math.ceil(this.playerRef.posY);
-     x = this.playerRef.posX + (y - this.playerRef.posY) * slope;
+    slope = angleCos / angleSin
+    dY = up ? -1 : 1;
+    dX = dY * slope;
+    y = up ? Math.floor(this.playerRef.posY) : Math.ceil(this.playerRef.posY);
+    x = this.playerRef.posX + (y - this.playerRef.posY) * slope;
 
     while (x / this.mapRef.miniMapScale >= 0 && x / this.mapRef.miniMapScale < this.mapRef.mapWidth && y / this.mapRef.miniMapScale >= 0 && y / this.mapRef.miniMapScale < this.mapRef.mapHeight) {
       let wallX = Math.floor(x / this.mapRef.miniMapScale);
@@ -101,6 +118,11 @@ export default class mapRenderer extends entity {
 
     if (dist != 0) {
       this.mapRef.drawRay(xhit, yhit);
+      dist = Math.sqrt(dist);
+      dist = dist * Math.cos(this.playerRef.rotation - rayAngle);
+      let stripHeight = (this.viewDist / dist);
+      this.strips[stripIndex].height = stripHeight;
+      this.strips[stripIndex].y = (config.screen.height-stripHeight)/2
     }
   }
 }

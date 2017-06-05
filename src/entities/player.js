@@ -11,20 +11,20 @@ export default class player extends entity {
     this.posY = 10;
     this.rotation = 0;
     this.speed = 0;
-    this.movSpeed = 1;
+    this.movSpeed = 0.5;
     this.direction = 0;
-    this.rotationSpeed = 6 * Math.PI / 180
-    this.sprite = PIXI.Sprite.fromImage('images/ghost.png');
-    this.sprite.anchor = new PIXI.Point(0.5, 0.5);
+    this.rotationSpeed = 3 * Math.PI / 180
+    //this.sprite = new PIXI.Sprite(PIXI.utils.TextureCache["images/ghost.png"]);
+    //this.sprite.anchor = new PIXI.Point(0.5, 0.5);
     this.bindKeys();
-    mainScene.addChild(this.sprite);
+    //mainScene.addChild(this.sprite);
   }
 
   update() {
     if (this.mapRef == undefined)
       this.mapRef = entityManager.findByName("miniMapHandler");
     this.move();
-    this.updateSprite();
+    //this.updateSprite();
   }
 
   updateSprite() {
@@ -38,7 +38,7 @@ export default class player extends entity {
 
     let newX = this.posX + Math.cos(this.rotation) * moveStep;
     let newY = this.posY + Math.sin(this.rotation) * moveStep;
-    
+
     if (!this.isBlocking(newX, newY)) {
       this.posX = newX;
       this.posY = newY;

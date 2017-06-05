@@ -14,6 +14,7 @@ class gameEngine {
       resolution: 1
     });
     renderer.view.className = "renderArea";
+    renderer.backgroundColor = 0x95a5a6;
     document.getElementById("main").appendChild(renderer.view);
     return renderer;
   }
@@ -21,10 +22,17 @@ class gameEngine {
   start() {
     this.renderer = this.initRenderer();
     this.mainScene = new PIXI.Container();
-    entityManager.addEntity(new player(this.mainScene));
-    entityManager.addEntity(new miniMapHandler(this.mainScene));
-    entityManager.addEntity(new mapRenderer(this.mainScene));
-    this.gameLoop(-1)
+    PIXI.loader.add([                             //TODO segregate loader to seperate class
+      "images/walls.png",
+      "images/ghost.png"
+    ])
+      .load(() => {
+        entityManager.addEntity(new player(this.mainScene));
+        entityManager.addEntity(new miniMapHandler(this.mainScene));
+        entityManager.addEntity(new mapRenderer(this.mainScene));
+        this.gameLoop(-1)
+      })
+
   }
 
   gameLoop() {
