@@ -9,27 +9,19 @@ export default class player extends entity {
     super("player");
     this.posX = 15;
     this.posY = 10;
-    this.rotation = 0;
+    this.rotation = -1.51;
     this.speed = 0;
     this.movSpeed = 0.18;
     this.direction = 0;
     this.rotationSpeed = 3 * Math.PI / 180
-    //this.sprite = new PIXI.Sprite(PIXI.utils.TextureCache["images/ghost.png"]);
-    //this.sprite.anchor = new PIXI.Point(0.5, 0.5);
     this.bindKeys();
-    //mainScene.addChild(this.sprite);
   }
 
   update() {
     if (this.mapRef == undefined)
       this.mapRef = entityManager.findByName("miniMapHandler");
     this.move();
-    //this.updateSprite();
-  }
-
-  updateSprite() {
-    this.sprite.position = new PIXI.Point(this.posX, this.posY);
-    this.sprite.rotation = this.rotation;
+    console.log(this.posX, this.posX * this.mapRef.miniMapScale, this.posY, this.posY * this.mapRef.miniMapScale);
   }
 
   move() {

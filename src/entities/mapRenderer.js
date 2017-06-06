@@ -78,7 +78,7 @@ export default class mapRenderer extends entity {
     let y = this.playerRef.posY + (x - this.playerRef.posX) * slope;
 
     while (x >= 0 && x < this.mapRef.mapWidth && y >= 0 && y < this.mapRef.mapHeight) {
-      let wallX = Math.floor(x);
+      let wallX = Math.floor(x + (right ? 0 : -1));
       let wallY = Math.floor(y);
       if (this.mapRef.map[wallY][wallX] > 0) {
         let distX = x - this.playerRef.posX;
@@ -100,12 +100,12 @@ export default class mapRenderer extends entity {
 
     while (x >= 0 && x < this.mapRef.mapWidth && y >= 0 && y < this.mapRef.mapHeight) {
       let wallX = Math.floor(x);
-      let wallY = Math.floor(y);
+      let wallY = Math.floor(y + (up ? -1 : 0));
       if (this.mapRef.map[wallY][wallX] > 0) {
         let distX = x - this.playerRef.posX;
         let distY = y - this.playerRef.posY;
         let blockdist = distX * distX + distY * distY;
-        if (!dist || blockdist < dist) {
+        if (dist == 0 || blockdist < dist) {
           dist = blockdist;
           xhit = x; yhit = y;
         }
@@ -116,11 +116,13 @@ export default class mapRenderer extends entity {
       y += dY;
     }
 
+
     if (dist != 0) {
       this.mapRef.drawRay(xhit, yhit);
       dist = Math.sqrt(dist);
       dist = dist * Math.cos(this.playerRef.rotation - rayAngle);
-      let stripHeight = (this.viewDist / dist);
+      let stripHeight = Math.round(this.viewDist / dist);
+     // console.log(stripIndex + " " + stripHeight);
       this.strips[stripIndex].height = stripHeight;
       this.strips[stripIndex].y = (config.screen.height - stripHeight) / 2
     }
