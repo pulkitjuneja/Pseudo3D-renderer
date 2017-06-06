@@ -77,9 +77,9 @@ export default class mapRenderer extends entity {
     let x = right ? Math.ceil(this.playerRef.posX) : Math.floor(this.playerRef.posX);
     let y = this.playerRef.posY + (x - this.playerRef.posX) * slope;
 
-    while (x / this.mapRef.miniMapScale >= 0 && x / this.mapRef.miniMapScale < this.mapRef.mapWidth && y / this.mapRef.miniMapScale >= 0 && y / this.mapRef.miniMapScale < this.mapRef.mapHeight) {
-      let wallX = Math.floor(x / this.mapRef.miniMapScale);
-      let wallY = Math.floor(y / this.mapRef.miniMapScale);
+    while (x >= 0 && x < this.mapRef.mapWidth && y >= 0 && y < this.mapRef.mapHeight) {
+      let wallX = Math.floor(x);
+      let wallY = Math.floor(y);
       if (this.mapRef.map[wallY][wallX] > 0) {
         let distX = x - this.playerRef.posX;
         let distY = y - this.playerRef.posY;
@@ -98,9 +98,9 @@ export default class mapRenderer extends entity {
     y = up ? Math.floor(this.playerRef.posY) : Math.ceil(this.playerRef.posY);
     x = this.playerRef.posX + (y - this.playerRef.posY) * slope;
 
-    while (x / this.mapRef.miniMapScale >= 0 && x / this.mapRef.miniMapScale < this.mapRef.mapWidth && y / this.mapRef.miniMapScale >= 0 && y / this.mapRef.miniMapScale < this.mapRef.mapHeight) {
-      let wallX = Math.floor(x / this.mapRef.miniMapScale);
-      let wallY = Math.floor(y / this.mapRef.miniMapScale);
+    while (x >= 0 && x < this.mapRef.mapWidth && y >= 0 && y < this.mapRef.mapHeight) {
+      let wallX = Math.floor(x);
+      let wallY = Math.floor(y);
       if (this.mapRef.map[wallY][wallX] > 0) {
         let distX = x - this.playerRef.posX;
         let distY = y - this.playerRef.posY;
@@ -122,7 +122,7 @@ export default class mapRenderer extends entity {
       dist = dist * Math.cos(this.playerRef.rotation - rayAngle);
       let stripHeight = (this.viewDist / dist);
       this.strips[stripIndex].height = stripHeight;
-      this.strips[stripIndex].y = (config.screen.height-stripHeight)/2
+      this.strips[stripIndex].y = (config.screen.height - stripHeight) / 2
     }
   }
 }

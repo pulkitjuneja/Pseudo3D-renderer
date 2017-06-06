@@ -11,7 +11,7 @@ export default class player extends entity {
     this.posY = 10;
     this.rotation = 0;
     this.speed = 0;
-    this.movSpeed = 0.5;
+    this.movSpeed = 0.18;
     this.direction = 0;
     this.rotationSpeed = 3 * Math.PI / 180
     //this.sprite = new PIXI.Sprite(PIXI.utils.TextureCache["images/ghost.png"]);
@@ -46,8 +46,8 @@ export default class player extends entity {
   }
 
   isBlocking(newX, newY) {
-    const arrPosX = Math.floor(newX / this.mapRef.miniMapScale)
-    const arrPosY = Math.floor(newY / this.mapRef.miniMapScale)
+    const arrPosX = Math.floor(newX)
+    const arrPosY = Math.floor(newY)
 
     if (arrPosY < 0 || arrPosY >= this.mapRef.mapHeight || arrPosX < 0 || arrPosX >= this.mapRef.mapWidth)
       return true;
