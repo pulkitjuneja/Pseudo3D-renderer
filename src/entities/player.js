@@ -21,7 +21,7 @@ export default class player extends entity {
     if (this.mapRef == undefined)
       this.mapRef = entityManager.findByName("miniMapHandler");
     this.move();
-    console.log(this.posX, this.posX * this.mapRef.miniMapScale, this.posY, this.posY * this.mapRef.miniMapScale);
+    // console.log(this.posX, this.posX * this.mapRef.miniMapScale, this.posY, this.posY * this.mapRef.miniMapScale);
   }
 
   move() {

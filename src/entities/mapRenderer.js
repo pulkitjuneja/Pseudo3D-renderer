@@ -11,7 +11,7 @@ export default class mapRenderer extends entity {
     this.init = false
     this.container = new PIXI.Container();
     this.stripWidth = 4 // no. of pixels in each strip 
-    this.viewDist = 1000;
+    this.viewDist = 700;
     this.strips = [];
     this.numStrips = config.screen.width / this.stripWidth;
     mainScene.addChild(this.container);
@@ -19,9 +19,10 @@ export default class mapRenderer extends entity {
   }
 
   initImageStrips() {
-    let stripTex = PIXI.utils.TextureCache["images/walls.png"]
-    stripTex.frame = new PIXI.Rectangle(0, 0, 4, 4);
+    //let stripTex = PIXI.utils.TextureCache["images/walls.png"]
+    let initialFrame = new PIXI.Rectangle(0, 0, 4, 4);
     for (let i = 0; i < this.numStrips; i++) {
+      let stripTex = new PIXI.Texture(PIXI.BaseTexture.fromImage('images/walls.png'), initialFrame);
       this.strips[i] = new PIXI.Sprite(stripTex);
       this.strips[i].width = 4;
       this.strips[i].height = 0;
@@ -63,6 +64,8 @@ export default class mapRenderer extends entity {
 
     let dist = 0;
     let xhit = 0, yhit = 0;
+    let wallType = 0;
+    let textureX;
 
     let right = (rayAngle > twoPI * 0.75 || rayAngle < twoPI * 0.25);
     let up = (rayAngle < 0 || rayAngle > Math.PI);
@@ -83,9 +86,11 @@ export default class mapRenderer extends entity {
       if (this.mapRef.map[wallY][wallX] > 0) {
         let distX = x - this.playerRef.posX;
         let distY = y - this.playerRef.posY;
-
+        wallType = this.mapRef.map[wallY][wallX];
         dist = distX * distX + distY * distY;
         xhit = x; yhit = y;
+        textureX = y % 1;
+        if (!right) textureX = 1 - textureX;
         break;
       }
       x += dX;
@@ -107,7 +112,10 @@ export default class mapRenderer extends entity {
         let blockdist = distX * distX + distY * distY;
         if (dist == 0 || blockdist < dist) {
           dist = blockdist;
+          wallType = this.mapRef.map[wallY][wallX];
           xhit = x; yhit = y;
+          textureX = x % 1;
+          if (up) textureX = 1 - textureX;
         }
         break;
       }
@@ -122,9 +130,12 @@ export default class mapRenderer extends entity {
       dist = Math.sqrt(dist);
       dist = dist * Math.cos(this.playerRef.rotation - rayAngle);
       let stripHeight = Math.round(this.viewDist / dist);
-     // console.log(stripIndex + " " + stripHeight);
       this.strips[stripIndex].height = stripHeight;
-      this.strips[stripIndex].y = (config.screen.height - stripHeight) / 2
+      var mult = 1
+      // if (stripIndex % 15)
+      //   mult *= -1
+      this.strips[stripIndex].y = (config.screen.height - stripHeight) / 2 ; 
+      this.strips[stripIndex].texture.frame = new PIXI.Rectangle(textureX*64, (wallType-1)*64, this.stripWidth, 64);
     }
   }
 }
