@@ -27,7 +27,7 @@ export default class player extends entity {
   move() {
     const moveStep = this.speed * this.movSpeed;
     this.rotation += this.direction * this.rotationSpeed;
-
+    this.rotation %= Math.PI*2;
     let newX = this.posX + Math.cos(this.rotation) * moveStep;
     let newY = this.posY + Math.sin(this.rotation) * moveStep;
 

@@ -20,6 +20,7 @@ export default class mapRenderer extends entity {
 
   initImageStrips() {
     //let stripTex = PIXI.utils.TextureCache["images/walls.png"]
+          console.log(this.numStrips);
     let initialFrame = new PIXI.Rectangle(0, 0, 4, 4);
     for (let i = 0; i < this.numStrips; i++) {
       let stripTex = new PIXI.Texture(PIXI.BaseTexture.fromImage('images/walls.png'), initialFrame);
@@ -29,6 +30,7 @@ export default class mapRenderer extends entity {
       this.strips[i].x = i * this.stripWidth;
       this.strips[i].y = 0;
       this.container.addChild(this.strips[i]);
+      console.log(this.strips[i].x,this.strips[i].width);
     }
   }
 
@@ -54,8 +56,7 @@ export default class mapRenderer extends entity {
       let rayAngle = Math.asin(rayScreenPos / rayViewDist);
       this.castSingleRay(this.playerRef.rotation + rayAngle, i);
     }
-  }
-
+  } 
   castSingleRay(rayAngle, stripIndex) {
     let twoPI = Math.PI * 2;
 
@@ -68,7 +69,7 @@ export default class mapRenderer extends entity {
     let textureX;
 
     let right = (rayAngle > twoPI * 0.75 || rayAngle < twoPI * 0.25);
-    let up = (rayAngle < 0 || rayAngle > Math.PI);
+    let up = (rayAngle > Math.PI);
 
     let angleSin = Math.sin(rayAngle);
     let angleCos = Math.cos(rayAngle);
@@ -132,10 +133,8 @@ export default class mapRenderer extends entity {
       let stripHeight = Math.round(this.viewDist / dist);
       this.strips[stripIndex].height = stripHeight;
       var mult = 1
-      // if (stripIndex % 15)
-      //   mult *= -1
       this.strips[stripIndex].y = (config.screen.height - stripHeight) / 2 ; 
-      this.strips[stripIndex].texture.frame = new PIXI.Rectangle(textureX*64, (wallType-1)*64, this.stripWidth, 64);
+      //this.strips[stripIndex].texture.frame = new PIXI.Rectangle(textureX*64, (wallType-1)*64, this.stripWidth, 64);
     }
   }
 }
