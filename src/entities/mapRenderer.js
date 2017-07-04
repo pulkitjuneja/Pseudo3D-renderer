@@ -10,7 +10,7 @@ export default class mapRenderer extends entity {
     super("mapRenderer");
     this.init = false
     this.container = new PIXI.Container();
-    this.stripWidth = 4 // no. of pixels in each strip 
+    this.stripWidth = 1 // no. of pixels in each strip 
     this.viewDist = 700;
     this.strips = [];
     this.numStrips = config.screen.width / this.stripWidth;
@@ -20,7 +20,7 @@ export default class mapRenderer extends entity {
 
   initImageStrips() {
     //let stripTex = PIXI.utils.TextureCache["images/walls.png"]
-          console.log(this.numStrips);
+    console.log(this.numStrips);
     let initialFrame = new PIXI.Rectangle(0, 0, 4, 4);
     for (let i = 0; i < this.numStrips; i++) {
       let stripTex = new PIXI.Texture(PIXI.BaseTexture.fromImage('images/walls.png'), initialFrame);
@@ -30,7 +30,7 @@ export default class mapRenderer extends entity {
       this.strips[i].x = i * this.stripWidth;
       this.strips[i].y = 0;
       this.container.addChild(this.strips[i]);
-      console.log(this.strips[i].x,this.strips[i].width);
+      console.log(this.strips[i].x, this.strips[i].width);
     }
   }
 
@@ -56,7 +56,7 @@ export default class mapRenderer extends entity {
       let rayAngle = Math.asin(rayScreenPos / rayViewDist);
       this.castSingleRay(this.playerRef.rotation + rayAngle, i);
     }
-  } 
+  }
   castSingleRay(rayAngle, stripIndex) {
     let twoPI = Math.PI * 2;
 
@@ -133,8 +133,14 @@ export default class mapRenderer extends entity {
       let stripHeight = Math.round(this.viewDist / dist);
       this.strips[stripIndex].height = stripHeight;
       var mult = 1
-      this.strips[stripIndex].y = (config.screen.height - stripHeight) / 2 ; 
-      //this.strips[stripIndex].texture.frame = new PIXI.Rectangle(textureX*64, (wallType-1)*64, this.stripWidth, 64);
+      let verticalAdjust = (config.screen.height - stripHeight) / 2 + this.playerRef.verticalRotation;
+      if (verticalAdjust < 0)
+        verticalAdjust = 0;
+      else if (verticalAdjust > (config.screen.height - stripHeight))
+        verticalAdjust = (config.screen.height - stripHeight);
+      this.strips[stripIndex].y = verticalAdjust ; 
+      let texX = textureX * 64 + stripIndex * (this.stripWidth - 1);
+      this.strips[stripIndex].texture.frame = new PIXI.Rectangle(textureX * 64, (wallType - 1) * 64, this.stripWidth * 2, 64);
     }
   }
 }

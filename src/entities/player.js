@@ -10,9 +10,11 @@ export default class player extends entity {
     this.posX = 15;
     this.posY = 10;
     this.rotation = -1.51;
+    this.verticalRotation = 0;
     this.speed = 0;
     this.movSpeed = 0.18;
     this.direction = 0;
+    this.verticalDirection = 0;
     this.rotationSpeed = 3 * Math.PI / 180
     this.bindKeys();
   }
@@ -27,7 +29,8 @@ export default class player extends entity {
   move() {
     const moveStep = this.speed * this.movSpeed;
     this.rotation += this.direction * this.rotationSpeed;
-    this.rotation %= Math.PI*2;
+    this.verticalRotation += this.verticalDirection * 100*this.rotationSpeed;
+    this.rotation %= Math.PI * 2;
     let newX = this.posX + Math.cos(this.rotation) * moveStep;
     let newY = this.posY + Math.sin(this.rotation) * moveStep;
 
@@ -58,6 +61,10 @@ export default class player extends entity {
           this.direction = -1; break;
         case 39:
           this.direction = 1; break;
+        case 87:
+          this.verticalDirection = 1; break;
+        case 83:
+          this.verticalDirection = -1; break;
       }
     };
     const onKeyUp = (e) => {
@@ -69,6 +76,9 @@ export default class player extends entity {
         case 37:
         case 39:
           this.direction = 0; break;
+        case 87:
+        case 83:
+          this.verticalDirection = 0;
       }
     };
     window.addEventListener("keydown", onKeyDown);
