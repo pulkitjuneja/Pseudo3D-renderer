@@ -1,6 +1,6 @@
 A raycasting based PSeudo 3d Renderer implemetation in javascript
 
-![Imgur](http://i.imgur.com/JPYfmXa.gif)
+![Imgur](http://i.imgur.com/JPYfmXa.gif =250x250)
 
 based on the tutorial by permadi
 
